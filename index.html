@@ -1187,10 +1187,11 @@
                     const matchedDay = validDays.find(d => rawDay.toLowerCase().includes(d.toLowerCase())) || 'Maandag';
 
                     const rawTime = row[1] || '1e uur';
-                    const teacher = row[2] || '';
-                    const subject = row[5] || row[3] || '';
-                    const room = row[6] || row[4] || 'A101';
-                    const topic = row[7] || row[5] || '';
+                    const room = row[2] || 'A101';
+                    const teacher = row[3] || '';
+                    const klas = row[4] || '';
+                    const subject = row[5] '';
+                    const topic = row[7] '';
 
                     if (teacher || subject || topic) {
                         fetchedLessons.push({
@@ -1198,7 +1199,7 @@
                             day: matchedDay,
                             time: rawTime.includes('uur') ? rawTime : `${rawTime}e uur`,
                             teacher: teacher || 'Collega',
-                            subject: subject || 'Open Les',
+                            subject: subject || 'Open les',
                             room: room || 'Klas',
                             topic: topic
                         });
