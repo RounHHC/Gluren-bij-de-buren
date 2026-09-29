@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="nl" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gluren bij de Buren - Swingweek Taalbeleid</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0c3a57'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="h-full text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+    <header class="bg-gradient-to-r from-brand-800 via-brand-700 to-indigo-900 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-400 text-brand-900 flex items-center justify-center text-2xl font-black shadow-md transform -rotate-3">
+                    👀
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        Gluren bij de Buren 
+                        <span class="text-xs bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">Plananas 26-27</span>
+                    </h1>
+                    <p class="text-xs text-brand-100 hidden sm:block">Swingweek Taalbeleid - Neem een kijkje in de klas van je collega!</p>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3">
+                <a href="https://docs.google.com/spreadsheets/d/1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI/edit?gid=291812062#gid=291812062" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs sm:text-sm font-bold rounded-lg shadow transition flex items-center gap-2">
+                    <span class="text-base">🍍</span>
+                    <span class="hidden md:inline">Plananas</span>
+                </a>
+
+                <button onclick="toggleInfoModal()" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium rounded-lg backdrop-blur-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="hidden sm:inline">Spelregels</span>
+                </button>
+
+                <button id="adminToggleBtn" onclick="openAdminModal()" class="px-3 py-2 bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs sm:text-sm font-bold rounded-lg shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-lock" id="adminLockIcon"></i>
+                    <span id="adminBtnText">Beheerdersmodus</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Banner Announcement -->
+        <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-brand-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl font-black select-none pointer-events-none">
+                TAAL
+            </div>
+            <div class="relative z-10 max-w-3xl">
+                <span class="inline-block px-3 py-1 bg-amber-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-full mb-3">
+                    🚀 Swingweek In Gang!
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">
+                    Welk team swingt het best?
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Welkom op het centrale platform van <strong>"Gluren bij de buren"</strong>. Strijd mee met <strong>Team Blauw</strong>, <strong>Team Rood</strong> of <strong>Team Geel</strong>! Verdien punten door je klas open te stellen of bij collega's op bezoek te gaan. <em>Geen bezoekerslimiet: iedereen is welkom!</em>
+                </p>
+            </div>
+        </div>
+
+        <!-- Leaderboard Section -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-amber-500"></i> Staafdiagram Tussenstand (Absolute Punten)
+                    </h3>
+                    <p class="text-xs text-slate-500">Teamscores in absolute aantallen — zie direct wie aan de leiding staat!</p>
+                </div>
+                <div class="text-right">
+                    <span id="lastUpdatedTag" class="text-xs bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-medium">
+                        Laatst bijgewerkt: zojuist
+                    </span>
+                </div>
+            </div>
+
+            <!-- Team Scores Bar Chart Container -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <!-- Bar Chart Grid -->
+                <div id="barChartContainer" class="relative min-h-[360px] flex items-end justify-around pt-12 pb-6 border-b border-slate-200 px-4 sm:px-12 gap-6">
+                    <!-- Dynamic vertical bars rendered here via JavaScript -->
+                </div>
+
+                <!-- Absolute Stats Summary Cards -->
+                <div id="chartStatsSummary" class="grid grid-cols-3 gap-3 mt-6 pt-2">
+                    <!-- Stats cards rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Lookup & Roster Section -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-users-viewfinder text-brand-600"></i> Vind jouw team (98 Collega's)
+                    </h3>
+                    <p class="text-xs text-slate-500">Typ je naam om te zien in welk team je zit tijdens de Swingweek!</p>
+                </div>
+
+                <!-- Search Member Input -->
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="memberSearchInput" oninput="searchMember()" placeholder="Zoek op jouw naam..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Member Search Result Banner -->
+            <div id="searchResultBox" class="hidden p-4 rounded-xl text-xs font-semibold flex items-center justify-between border"></div>
+
+            <!-- Collapsible Team Rosters -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2" id="teamsRosterContainer">
+                <!-- Team rosters dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Plananas Quick Reference Notice -->
+        <div class="bg-gradient-to-r from-emerald-900 to-teal-900 border border-emerald-700/50 rounded-2xl p-5 text-white shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 text-2xl flex-shrink-0">
+                    <span>🍍</span>
+                </div>
+                <div>
+                    <h4 class="font-bold text-base text-emerald-200">Centraal Lessenrooster (Plananas)</h4>
+                    <p class="text-xs text-emerald-100/80">Het dagmenu wordt bijgewerkt via het online overzicht. Bekijk de planning of geef je eigen open les door!</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTroubleshootModal()" class="px-4 py-2 bg-emerald-800/80 hover:bg-emerald-700 text-emerald-200 font-semibold rounded-xl text-xs transition border border-emerald-600/50 flex items-center gap-1.5">
+                    <i class="fa-solid fa-wrench"></i>
+                    <span>Sync Probleem?</span>
+                </button>
+                <a href="https://docs.google.com/spreadsheets/d/1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI/edit?gid=291812062#gid=291812062" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow transition whitespace-nowrap flex items-center gap-2">
+                    <span>Open Plananas</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Menu van de Dag (Daily Lesson Schedule) -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-utensils text-brand-600"></i> Menu van de Dag (Lesbezoeken)
+                        </h3>
+                        <span id="syncStatusBadge" class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Plananas Sync
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500">Lessen worden automatisch geladen uit Plananas of kunnen handmatig ververst worden.</p>
+                </div>
+
+                <!-- Sync Button & Day Selector Tabs -->
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                    <button onclick="fetchPlananasData(true)" title="Haal nieuwste gegevens op uit Plananas" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center gap-1.5 flex-shrink-0">
+                        <i class="fa-solid fa-rotate" id="syncIcon"></i>
+                        <span>Sync Plananas</span>
+                    </button>
+
+                    <button onclick="toggleTroubleshootModal()" title="Help met synchroniseren" class="px-2.5 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs rounded-xl shadow-sm transition flex items-center gap-1 flex-shrink-0 border border-amber-300">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                        <span class="hidden sm:inline">Hulp</span>
+                    </button>
+
+                    <div class="flex items-center bg-slate-100 p-1 rounded-xl overflow-x-auto" id="dayTabsContainer">
+                        <button onclick="setSelectedDay('Maandag')" class="day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap" data-day="Maandag">Maandag</button>
+                        <button onclick="setSelectedDay('Dinsdag')" class="day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap" data-day="Dinsdag">Dinsdag</button>
+                        <button onclick="setSelectedDay('Woensdag')" class="day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap" data-day="Woensdag">Woensdag</button>
+                        <button onclick="setSelectedDay('Donderdag')" class="day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap" data-day="Donderdag">Donderdag</button>
+                        <button onclick="setSelectedDay('Vrijdag')" class="day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap" data-day="Vrijdag">Vrijdag</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Error Banner (Hidden by default, shown if fetch fails) -->
+            <div id="syncErrorBanner" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-4 rounded-xl text-xs space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-circle-exclamation text-amber-600 text-base mt-0.5"></i>
+                        <div>
+                            <strong class="font-bold text-slate-900">Kon de gegevens niet rechtstreeks ophalen uit Google Sheets.</strong>
+                            <p class="text-slate-600 mt-0.5" id="syncErrorMessage">Mogelijke oorzaak: Het sheet is niet openbaar gemaakt op het web of wordt geblokkeerd door de browser/netwerkbeveiliging.</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleTroubleshootModal()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg whitespace-nowrap shadow-sm text-xs">
+                        <i class="fa-solid fa-wrench mr-1"></i> Oplossen & Import
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar for Lessons -->
+            <div class="flex items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                <div class="relative w-full">
+                    <input type="text" id="lessonSearchInput" oninput="renderLessons()" placeholder="Zoek op vak, leerkracht of lokaal..." class="w-full bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
+                </div>
+            </div>
+
+            <!-- Lesson List -->
+            <div id="lessonsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamic Lesson Cards will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Admin Activity Log & Score Breakdown -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Activity Log -->
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-600"></i> Laatste Puntenupdates & Bezoeken
+                    </h3>
+                    <span class="text-xs text-slate-400" id="logCount">0 logs</span>
+                </div>
+                <div id="activityLogList" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                    <!-- Logs injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Quick Info Highlights -->
+            <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white rounded-2xl shadow-sm p-6 space-y-4">
+                <h3 class="text-base font-bold flex items-center gap-2 text-amber-400">
+                    <i class="fa-solid fa-lightbulb"></i> Plananas 26-27
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Tijdens het gluren laten we ons inspireren door sterke voorbeelden in de klas bij collega's.
+                </p>
+                <ul class="text-xs space-y-2.5 text-slate-200">
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                        <span><strong>Les openstellen:</strong> Levert 1 punt op op de ranglijst.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                        <span><strong>Bezoek ontvangen:</strong> Elk bezoeker in je klas = +1 punt.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                        <span><strong>Bezoek afleggen:</strong> Vul je observatiefiche in = +1 punt.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-medium text-slate-700">Taalbeleid "Gluren bij de buren" — Schooljaar 2026-2027</p>
+            <p class="mt-1 text-slate-400">Ontwikkeld ter ondersteuning van Plananas 26-27. Gegevens worden bewaard in de beheeromgeving.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: Admin Password & Control Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 transform transition-all">
+            <!-- Header -->
+            <div class="bg-slate-900 text-white p-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-amber-400 text-slate-900 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Taalbeleid Beheerder</h3>
+                        <p class="text-xs text-slate-400">Alleen geautoriseerd voor sitebeheerder</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Login View if not logged in -->
+                <div id="adminLoginSection" class="space-y-4">
+                    <p class="text-xs text-slate-600">Voer het beheerderswachtwoord in om punten toe te kennen of het Menu van de Dag te bewerken.</p>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Wachtwoord</label>
+                        <input type="password" id="adminPasswordInput" placeholder="Wachtwoord (standaard: taal2026)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <div id="loginErrorMsg" class="text-xs text-red-500 font-medium hidden">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Onjuist wachtwoord. Probeer opnieuw.
+                    </div>
+                    <button onclick="attemptAdminLogin()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                        Aanmelden als Beheerder
+                    </button>
+                </div>
+
+                <!-- Admin Dashboard View if logged in -->
+                <div id="adminControlsSection" class="space-y-6 hidden">
+                    <!-- Status Badge -->
+                    <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-2 rounded-lg text-xs font-medium">
+                        <span><i class="fa-solid fa-lock-open text-emerald-600 mr-1"></i> Je bent ingelogd als Beheerder</span>
+                        <button onclick="adminLogout()" class="text-emerald-700 underline text-xs hover:text-emerald-900">Uitloggen</button>
+                    </div>
+
+                    <!-- Tabs for Admin actions -->
+                    <div class="border-b border-slate-200 flex space-x-4">
+                        <button onclick="switchAdminTab('points')" id="tabPointsBtn" class="border-b-2 border-brand-600 pb-2 text-xs font-bold text-brand-600">Punten Ingeven</button>
+                        <button onclick="switchAdminTab('lessons')" id="tabLessonsBtn" class="border-b-2 border-transparent pb-2 text-xs font-semibold text-slate-500 hover:text-slate-800">Les Toevoegen</button>
+                    </div>
+
+                    <!-- TAB 1: Points Management -->
+                    <div id="adminTabPoints" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Selecteer Team</label>
+                            <select id="adminTeamSelect" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold">
+                                <!-- Options populated dynamically -->
+                            </select>
+                        </div>
+
+                        <!-- Quick Presets based on rules -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Snelkeuze Regel (1 Punt per actie)</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button type="button" onclick="setPointPreset(1, 'Les opengesteld (+1 pt)')" class="px-2 py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 rounded-lg text-xs font-semibold text-center transition">
+                                    🔓 Les Open (+1)
+                                </button>
+                                <button type="button" onclick="setPointPreset(1, 'Bezoeker ontvangen (+1 pt per bezoeker)')" class="px-2 py-1.5 bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-900 rounded-lg text-xs font-semibold text-center transition">
+                                    👤 Bezoeker (+1)
+                                </button>
+                                <button type="button" onclick="setPointPreset(1, 'Les bezocht via observatiefiche (+1 pt)')" class="px-2 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-lg text-xs font-semibold text-center transition">
+                                    📝 Bezoek (+1)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Aantal Punten</label>
+                                <input type="number" id="adminPointsInput" value="1" min="1" step="1" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Actie Type</label>
+                                <select id="adminActionType" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <option value="+">Punten Toevoegen (+)</option>
+                                    <option value="-">Punten Aftrekken (-)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Reden / Omschrijving</label>
+                            <input type="text" id="adminReasonInput" placeholder="bvd. 2 bezoekers ontvangen bij les Wiskunde" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+
+                        <button onclick="submitPointsUpdate()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                            <i class="fa-solid fa-plus-circle mr-1"></i> Punten Bijwerken
+                        </button>
+                    </div>
+
+                    <!-- TAB 2: Lesson Management -->
+                    <div id="adminTabLessons" class="space-y-3 hidden">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Dag</label>
+                                <select id="newLessonDay" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                                    <option>Maandag</option>
+                                    <option>Dinsdag</option>
+                                    <option>Woensdag</option>
+                                    <option>Donderdag</option>
+                                    <option>Vrijdag</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Lesuur</label>
+                                <select id="newLessonTime" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                                    <option>1e uur</option>
+                                    <option>2e uur</option>
+                                    <option>3e uur</option>
+                                    <option>4e uur</option>
+                                    <option>5e uur</option>
+                                    <option>6e uur</option>
+                                    <option>7e uur</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Leerkracht</label>
+                                <input type="text" id="newLessonTeacher" placeholder="mvr. Janssens" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Vak & Klas</label>
+                                <input type="text" id="newLessonSubject" placeholder="Aardrijkskunde 4 A" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Lokaal (bijv. A201)</label>
+                                <input type="text" id="newLessonRoom" placeholder="A201" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Lesinhoud (Kort)</label>
+                                <input type="text" id="newLessonTopic" placeholder="bijv. Coöperatief groepswerk" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs">
+                            </div>
+                        </div>
+
+                        <button onclick="submitNewLesson()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                            <i class="fa-solid fa-calendar-plus mr-1"></i> Les Toevoegen aan Dagmenu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Rules & Info Modal -->
+    <div id="infoModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100">
+            <div class="bg-gradient-to-r from-brand-700 to-indigo-800 text-white p-5 flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question"></i> Spelregels "Gluren bij de Buren"
+                </h3>
+                <button onclick="toggleInfoModal()" class="text-white/70 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 space-y-4 text-xs text-slate-600 leading-relaxed max-h-[75vh] overflow-y-auto">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900">
+                    <strong>🎯 Doel van de Swingweek:</strong>
+                    Collega's zijn verdeeld in drie teams: <strong>Team Blauw</strong>, <strong>Team Rood</strong> en <strong>Team Geel</strong>. Samen verzamelen jullie zoveel mogelijk punten!
+                </div>
+
+                <h4 class="font-bold text-slate-900 text-sm">🏆 Punten verdienen (Absolute Aantallen):</h4>
+                <ul class="space-y-2">
+                    <li class="flex items-start gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-black text-xs">+1 pt</span>
+                        <span><strong>Les openstellen:</strong> Zet je klasdeur open op Plananas.</span>
+                    </li>
+                    <li class="flex items-start gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-sky-400 text-slate-950 px-2 py-0.5 rounded font-black text-xs">+1 pt</span>
+                        <span><strong>Per bezoeker:</strong> Elk collega die bij jouw les komt gluren levert 1 extra punt op!</span>
+                    </li>
+                    <li class="flex items-start gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <span class="bg-emerald-400 text-slate-950 px-2 py-0.5 rounded font-black text-xs">+1 pt</span>
+                        <span><strong>Zelf een les bezoeken:</strong> Ga kijken bij een collega (te controleren via de observatiefiche).</span>
+                    </li>
+                </ul>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900 font-semibold">
+                    👥 <strong>Geen Bezoekerslimiet:</strong> Er geldt geen maximum aantal bezoekers per klas. Je mag met meerdere collega's tegelijk een les bijwonen!
+                </div>
+
+                <div class="pt-2 text-right">
+                    <button onclick="toggleInfoModal()" class="bg-slate-900 text-white px-4 py-2 rounded-lg font-bold">
+                        Begrepen, laten we gluren!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Plananas Sync Troubleshooting & Direct Import Modal -->
+    <div id="troubleshootModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden border border-slate-100">
+            <div class="bg-gradient-to-r from-amber-600 to-amber-800 text-white p-5 flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    <i class="fa-solid fa-wrench"></i> Troubleshooting & Handmatige Import Plananas
+                </h3>
+                <button onclick="toggleTroubleshootModal()" class="text-white/70 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-5 text-xs text-slate-600 max-h-[80vh] overflow-y-auto">
+                <!-- Step 1: Explanation of Google Sheets requirement -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                    <h4 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px]">1</span>
+                        Google Sheet Openbaar Maken (Zorg dat de link werkt)
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        Als de knop <em>"Sync Plananas"</em> een foutmelding geeft, is het Google Sheet waarschijnlijk nog niet gepubliceerd op het web. Volg deze stappen in Google Sheets:
+                    </p>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-700 font-medium pl-1">
+                        <li>Open het <a href="https://docs.google.com/spreadsheets/d/1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI/edit?gid=291812062#gid=291812062" target="_blank" class="text-brand-600 underline">Plananas Google Sheet</a>.</li>
+                        <li>Klik linksboven op <strong>Bestand (File)</strong> &rarr; <strong>Delen (Share)</strong> &rarr; <strong>Publiceren op het web (Publish to web)</strong>.</li>
+                        <li>Kies het tabblad of <em>Gehele document</em> en kies indeling <strong>Door komma gescheiden waarden (.csv)</strong>.</li>
+                        <li>Klik op <strong>Publiceren</strong>. Het laden zal daarna direct werken!</li>
+                    </ol>
+                </div>
+
+                <!-- Step 2: Direct Copy/Paste Import fallback -->
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-3">
+                    <h4 class="font-bold text-emerald-950 text-xs flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">2</span>
+                        Direct Gegevens Plakken (Snelle Noodoplossing)
+                    </h4>
+                    <p class="text-emerald-900">
+                        Selecteer en kopieer de tabel vanuit je Google Sheet of Excel en plak deze in het onderstaande veld:
+                    </p>
+                    <textarea id="directCsvInput" rows="5" placeholder="Plak hier de gekopieerde cellen of CSV-tekst uit Plananas..." class="w-full bg-white border border-emerald-300 rounded-xl p-3 text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                    
+                    <button onclick="importDirectCsv()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>Gegevens Nu Verwerken & Toepassen</span>
+                    </button>
+                </div>
+
+                <!-- Step 3: Custom Spreadsheet ID override -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                    <h4 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-full bg-slate-700 text-white flex items-center justify-center text-[10px]">3</span>
+                        Spreadsheet ID of URL Aanpassen
+                    </h4>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Google Spreadsheet ID</label>
+                        <input type="text" id="customSheetIdInput" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-xs" value="1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tab GID</label>
+                            <input type="text" id="customSheetGidInput" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-xs" value="291812062">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="saveCustomSheetSettings()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2 rounded-lg text-xs shadow transition">
+                                Opslaan & Testen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 text-right">
+                    <button onclick="toggleTroubleshootModal()" class="bg-slate-900 text-white px-4 py-2 rounded-lg font-bold">
+                        Sluiten
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-semibold pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage">Punten bijgewerkt!</span>
+    </div>
+
+    <script>
+        // Exact ordering as requested: Blauw, Rood, Geel
+        const TEAM_ORDER = ['team-blauw', 'team-rood', 'team-geel'];
+
+        const DEFAULT_TEAMS = [
+            { 
+                id: 'team-blauw', 
+                name: 'Team Blauw (Team 1)', 
+                shortName: 'Team Blauw',
+                emoji: '🔵', 
+                points: 35, 
+                gradient: 'from-sky-500 to-blue-600', 
+                colorClass: 'bg-sky-500', 
+                borderClass: 'border-sky-500', 
+                textClass: 'text-sky-600', 
+                bgLight: 'bg-sky-50',
+                members: [
+                    "Arvid De Quanter", "Inge Lochy", "Laurent Genin", "Katja Christis", "Thomas Debois",
+                    "Dorien Rietjens", "Els D’Hondt", "Elissa Bronselaer", "Barbara Ackermans", "Geo Van Rode",
+                    "Loïc Serrano Valiente", "Virginie Houtart", "Matthew Emmerechts", "Loïc Serrano", "Joris Verbist",
+                    "Eline Wouters", "Katrijn Saen", "Wouter Van Sever", "Nathalie Vyncke", "Helena Van Kerrebroeck",
+                    "Patricia Raecke", "Vincent Bonte", "Claire Lenz", "Sophie Lamber", "Marijke Huys",
+                    "Camille Wytsman", "Laura Cloetens", "Bram Ackermans", "Karen Puttemans", "Liese Vangeneugden",
+                    "Stef Abts", "Guy Biesmans", "Jasmine Van Den Berge"
+                ]
+            },
+            { 
+                id: 'team-rood', 
+                name: 'Team Rood (Team 2)', 
+                shortName: 'Team Rood',
+                emoji: '🔴', 
+                points: 38, 
+                gradient: 'from-rose-500 to-red-600', 
+                colorClass: 'bg-rose-500', 
+                borderClass: 'border-rose-500', 
+                textClass: 'text-rose-600', 
+                bgLight: 'bg-rose-50',
+                members: [
+                    "Tom Gysegom", "Stefanie Huygen", "Kim Massij", "Natasha Vandensande", "Dana Van Der Bijl",
+                    "Karen Everaet", "Marlies Wambacq", "Lennert De Wachter", "Hilde Salaets", "Yves De Langhe",
+                    "Laurence Verstraeten", "Patty Vertessen", "Jens Peeters", "Lia Van Samang", "Lynn Hunninck",
+                    "Anne Vanvoorden", "Winanda Nuyttens", "Willem De Vos", "Jorghé Van Hecke", "Raya Franckx",
+                    "Els Verraedt", "Manon Van Cutsem", "Joris De Dier", "Noa Rousseau", "Mimi Sels",
+                    "Geert Vantieghem", "Ewa Freney", "In Aé Delhaye", "Wendy Slegers", "Astrid Maetens",
+                    "Inge Pollentier", "Tanja Costermans"
+                ]
+            },
+            { 
+                id: 'team-geel', 
+                name: 'Team Geel (Team 3)', 
+                shortName: 'Team Geel',
+                emoji: '🟡', 
+                points: 42, 
+                gradient: 'from-amber-400 to-yellow-500', 
+                colorClass: 'bg-amber-400', 
+                borderClass: 'border-amber-400', 
+                textClass: 'text-amber-600', 
+                bgLight: 'bg-amber-50',
+                members: [
+                    "Jelle Roelants", "Lisbet Willems", "Jo De Baerdemaeker", "Niki Mommaerts", "Jolien Van Orshoven",
+                    "Brent Verhoeven", "Willy Duchatelet", "Petra Vandendriessche", "Goedele van Baarle", "Dominique Desmaret",
+                    "Hans Van Tigchelt", "Daisy Tobback", "Bart Scheerlinck", "Hans De Vrij", "Marnix Denys",
+                    "Jeroen De Vos", "Hilde De Bruyne", "Sam Dehertog", "Charlotte Deleuze", "Isabelle Biot",
+                    "Lieve Claes", "Damian Fiore", "Toon De Kegel", "Wannes Reniers", "Luka Vancraesbeek",
+                    "Magali Dubuisson", "Hannelore Vanrobaeys", "Caroline Rutgeerts", "Barbara Beyers", "Carl Panneels",
+                    "Maarten Panis", "Matthias Ceulers", "Sven Claeskens"
+                ]
+            }
+        ];
+
+        // Default lessons data aligned with Plananas format
+        const DEFAULT_LESSONS = [
+            { id: 1, day: 'Maandag', time: '2e uur', teacher: 'Katja Christis', subject: 'Nederlands 3 A', room: 'A102', topic: 'Interactieve spreekvaardigheid & rollenspel' },
+            { id: 2, day: 'Maandag', time: '4e uur', teacher: 'Tom Gysegom', subject: 'Wiskunde 4 B', room: 'B205', topic: 'Gedifferentieerde oefeningen op vergelijkingen' },
+            { id: 3, day: 'Dinsdag', time: '1e uur', teacher: 'Inge Lochy', subject: 'Frans 5 HW', room: 'A301', topic: 'Woordenschatverwerving via coöperatief leren' },
+            { id: 4, day: 'Dinsdag', time: '3e uur', teacher: 'Jelle Roelants', subject: 'Aardrijkskunde 2 C', room: 'C014', topic: 'Kaartvaardigheden met digitale ondersteuning' },
+            { id: 5, day: 'Woensdag', time: '2e uur', teacher: 'Katrijn Saen', subject: 'Engels 3 STW', room: 'A108', topic: 'Scaffolding bij luistervaardigheid' },
+            { id: 6, day: 'Donderdag', time: '5e uur', teacher: 'Stefanie Huygen', subject: 'Biologie 4 STW', room: 'Labo 2', topic: 'Onderzoekend leren & vaktaalreconstructie' },
+            { id: 7, day: 'Vrijdag', time: '3e uur', teacher: 'Lisbet Willems', subject: 'Geschiedenis 3 EC', room: 'A110', topic: 'Kritisch bronnenonderzoek in groepjes' }
+        ];
+
+        function renderLeaderboard() {
+            const chartContainer = document.getElementById('barChartContainer');
+            const statsSummary = document.getElementById('chartStatsSummary');
+
+            const orderedTeams = TEAM_ORDER.map(id => teams.find(t => t.id === id) || teams[0]);
+            
+            // Zoomed scale calculations to exaggerate score differences
+            const pointsArray = orderedTeams.map(t => t.points);
+            const maxPoints = Math.max(...pointsArray);
+            const minPoints = Math.min(...pointsArray);
+            
+            // Dynamic baseline zoom
+            const spread = Math.max(5, maxPoints - minPoints);
+            const baseMin = Math.max(0, Math.floor(minPoints - spread * 0.8));
+            const chartMax = Math.ceil(maxPoints + spread * 0.3);
+            const range = Math.max(1, chartMax - baseMin);
+
+            chartContainer.innerHTML = '';
+            statsSummary.innerHTML = '';
+
+            const yAxisScaleHtml = `
+                <div class="absolute inset-x-0 top-6 bottom-12 flex flex-col justify-between pointer-events-none opacity-20 text-[10px] text-slate-500 font-mono">
+                    <div class="border-b border-dashed border-slate-400 w-full flex justify-between"><span>${chartMax} ptn</span></div>
+                    <div class="border-b border-dashed border-slate-400 w-full flex justify-between"><span>${Math.round(baseMin + range * 0.66)} ptn</span></div>
+                    <div class="border-b border-dashed border-slate-400 w-full flex justify-between"><span>${Math.round(baseMin + range * 0.33)} ptn</span></div>
+                    <div class="border-b border-slate-400 w-full flex justify-between"><span>${baseMin} ptn</span></div>
+                </div>
+            `;
+            chartContainer.innerHTML = yAxisScaleHtml;
+
+            const sortedByScore = [...orderedTeams].sort((a,b) => b.points - a.points);
+
+            orderedTeams.forEach(team => {
+                const isLeader = team.points === maxPoints && maxPoints > 0;
+                const rankIndex = sortedByScore.findIndex(t => t.id === team.id) + 1;
+                
+                const relativeFraction = (team.points - baseMin) / range;
+                const heightPercentage = Math.max(15, Math.min(98, Math.round(relativeFraction * 85 + 15)));
+
+                const barHtml = `
+                    <div class="flex flex-col items-center justify-end h-full z-10 w-1/3 max-w-[140px] group">
+                        <div class="mb-2 transition-all duration-300 transform group-hover:-translate-y-1 text-center">
+                            ${isLeader ? 
+                                '<span class="bg-amber-400 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md inline-block mb-1 ring-2 ring-amber-300 animate-pulse">👑 #1 Koploper</span>' : 
+                                `<span class="bg-slate-100 text-slate-600 font-bold text-[10px] px-2 py-0.5 rounded-full inline-block mb-1 border border-slate-200">Rang #${rankIndex}</span>`
+                            }
+                            <div class="text-2xl sm:text-3xl font-black ${isLeader ? 'text-amber-600' : 'text-slate-900'}">${team.points} <span class="text-xs font-semibold text-slate-500">ptn</span></div>
+                        </div>
+
+                        <div class="w-full bg-slate-100 rounded-t-2xl relative overflow-hidden flex items-end justify-center shadow-inner border border-b-0 ${isLeader ? 'border-amber-400 ring-2 ring-amber-400/30' : 'border-slate-200'}" style="height: ${heightPercentage}%;">
+                            <div class="w-full bg-gradient-to-t ${team.gradient} rounded-t-xl transition-all duration-1000 shadow-lg relative flex items-start justify-center pt-2" style="height: 100%;">
+                                <div class="absolute inset-x-0 top-0 h-2.5 bg-white/40 rounded-t-xl"></div>
+                                <span class="text-white font-extrabold text-xs opacity-90">${team.emoji}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-center">
+                            <span class="font-black text-xs sm:text-sm text-slate-800 block">${team.shortName || team.name}</span>
+                            <span class="text-[10px] text-slate-400 font-medium">${team.members ? team.members.length : 0} leden</span>
+                        </div>
+                    </div>
+                `;
+                chartContainer.innerHTML += barHtml;
+
+                const summaryCardHtml = `
+                    <div class="${team.bgLight} border ${team.borderClass} ${isLeader ? 'ring-2 ring-amber-400/40' : ''} rounded-xl p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-slate-700">${team.shortName || team.name} ${team.emoji}</div>
+                        <div class="text-lg sm:text-2xl font-extrabold ${team.textClass}">${team.points} <span class="text-xs font-normal text-slate-500">ptn</span></div>
+                        <div class="text-[10px] text-slate-500 font-medium">${team.members ? team.members.length : 0} collega's</div>
+                    </div>
+                `;
+                statsSummary.innerHTML += summaryCardHtml;
+            });
+        }
+
+        function getHourIndex(timeStr) {
+            const match = timeStr.match(/(\d+)/);
+            return match ? parseInt(match[1]) : 99;
+        }
+
+        function renderLessons() {
+            const container = document.getElementById('lessonsContainer');
+            if (!container) return;
+
+            const searchQuery = document.getElementById('lessonSearchInput')?.value.trim().toLowerCase() || '';
+
+            let filtered = lessons.filter(l => {
+                const matchDay = l.day === selectedDay;
+                const matchSearch = searchQuery === '' || 
+                    l.teacher.toLowerCase().includes(searchQuery) ||
+                    l.subject.toLowerCase().includes(searchQuery) ||
+                    (l.topic && l.topic.toLowerCase().includes(searchQuery)) ||
+                    l.room.toLowerCase().includes(searchQuery);
+                return matchDay && matchSearch;
+            });
+
+            filtered.sort((a, b) => getHourIndex(a.time) - getHourIndex(b.time));
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-6">
+                        <i class="fa-solid fa-calendar-xmark text-4xl text-slate-300 mb-3 block"></i>
+                        <h4 class="font-bold text-slate-700 text-sm">Geen geopende lessen gevonden op ${selectedDay}</h4>
+                        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Geef zelf je les door via Plananas of selecteer een andere dag.</p>
+                        <a href="https://docs.google.com/spreadsheets/d/1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI/edit?gid=291812062#gid=291812062" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition">
+                            <span class="text-sm">🍍</span> Les Openstellen in Plananas
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(lesson => `
+                <div class="bg-white border border-slate-200 hover:border-brand-300 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-black text-brand-700 bg-brand-50 border border-brand-200/60 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-brand-500 text-[11px]"></i>
+                                <span>${lesson.time}</span>
+                            </span>
+                            <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">${lesson.day}</span>
+                        </div>
+
+                        <h4 class="font-black text-slate-900 text-base leading-snug">${lesson.subject}</h4>
+                        <p class="text-xs text-slate-600 font-semibold mt-0.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-tie text-brand-600"></i> ${lesson.teacher}
+                        </p>
+
+                        ${lesson.topic ? `
+                            <div class="mt-2.5 p-2 bg-slate-50 rounded-lg border border-slate-200/70 text-xs text-slate-700">
+                                <strong class="text-slate-900 block text-[10px] font-bold uppercase tracking-wider text-brand-700">Inhoud / Focus:</strong>
+                                <span>${lesson.topic}</span>
+                            </div>
+                        ` : ''}
+
+                        <div class="mt-3 text-xs space-y-1 text-slate-500 border-t border-slate-100 pt-3 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-door-open text-slate-400"></i> <span class="font-mono font-bold text-slate-700">${lesson.room}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="https://docs.google.com/spreadsheets/d/1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI/edit?gid=291812062#gid=291812062" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-emerald-600"></i>
+                        <span>Bezoek Plannen op Plananas</span>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function submitNewLesson() {
+            const day = document.getElementById('newLessonDay').value;
+            const time = document.getElementById('newLessonTime').value || '1e uur';
+            const teacher = document.getElementById('newLessonTeacher').value;
+            const subject = document.getElementById('newLessonSubject').value;
+            const room = document.getElementById('newLessonRoom').value || 'A101';
+            const topic = document.getElementById('newLessonTopic').value || '';
+
+            if (!teacher || !subject) {
+                showToast("Vul minstens leerkracht en vak in!");
+                return;
+            }
+
+            const newLesson = {
+                id: Date.now(),
+                day,
+                time,
+                teacher,
+                subject,
+                room,
+                topic
+            };
+
+            lessons.push(newLesson);
+            localStorage.setItem('gluren_lessons_v3', JSON.stringify(lessons));
+
+            renderLessons();
+            showToast(`Nieuwe les van ${teacher} toegevoegd aan ${day}!`);
+
+            document.getElementById('newLessonTeacher').value = '';
+            document.getElementById('newLessonSubject').value = '';
+            document.getElementById('newLessonTopic').value = '';
+            closeAdminModal();
+        }
+
+        // Global State Initializers with localStorage persistence
+        let teams = JSON.parse(localStorage.getItem('gluren_teams_v3')) || DEFAULT_TEAMS;
+        let lessons = JSON.parse(localStorage.getItem('gluren_lessons_v3')) || DEFAULT_LESSONS;
+        let activityLogs = JSON.parse(localStorage.getItem('gluren_logs_v3')) || [
+            { id: 1, text: "Team Geel ontving +1 punt (Les opengesteld)", time: "Zojuist" },
+            { id: 2, text: "Team Rood ontving +1 punt (Bezoek afgelegd)", time: "10 min geleden" },
+            { id: 3, text: "Team Blauw ontving +1 punt (Les opengesteld)", time: "25 min geleden" }
+        ];
+        let selectedDay = 'Maandag';
+        let isAdminLoggedIn = false;
+
+        function saveTeamsState() {
+            localStorage.setItem('gluren_teams_v3', JSON.stringify(teams));
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('lastUpdatedTag').innerText = `Laatst bijgewerkt: ${timeStr}`;
+        }
+
+        function setSelectedDay(day) {
+            selectedDay = day;
+            document.querySelectorAll('.day-tab').forEach(tab => {
+                if (tab.getAttribute('data-day') === day) {
+                    tab.className = "day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap bg-brand-600 text-white shadow-sm";
+                } else {
+                    tab.className = "day-tab px-4 py-2 text-xs font-bold rounded-lg transition whitespace-nowrap text-slate-600 hover:bg-slate-200";
+                }
+            });
+            renderLessons();
+        }
+
+        function renderTeamsRoster() {
+            const container = document.getElementById('teamsRosterContainer');
+            if (!container) return;
+
+            const orderedTeams = TEAM_ORDER.map(id => teams.find(t => t.id === id) || teams[0]);
+
+            container.innerHTML = orderedTeams.map(team => `
+                <div class="border border-slate-200 rounded-xl p-4 ${team.bgLight}">
+                    <div class="flex items-center justify-between border-b border-slate-200/80 pb-2 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">${team.emoji}</span>
+                            <h4 class="font-bold text-slate-900 text-sm">${team.shortName || team.name}</h4>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700">
+                            ${team.members ? team.members.length : 0} leden
+                        </span>
+                    </div>
+                    <div class="max-h-48 overflow-y-auto space-y-1 pr-1 text-xs text-slate-600 font-medium">
+                        ${team.members ? team.members.map(m => `<div class="py-0.5 px-2 bg-white/70 rounded hover:bg-white transition flex items-center gap-1.5"><i class="fa-solid fa-user text-[10px] text-slate-400"></i> ${m}</div>`).join('') : '<p class="text-slate-400">Geen leden ingevoerd</p>'}
+                    </div>
+                </div>
+            `).join('');
+
+            const adminSelect = document.getElementById('adminTeamSelect');
+            if (adminSelect) {
+                adminSelect.innerHTML = orderedTeams.map(t => `<option value="${t.id}">${t.emoji} ${t.shortName || t.name} (${t.points} ptn)</option>`).join('');
+            }
+        }
+
+        function searchMember() {
+            const query = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+            const resultBox = document.getElementById('searchResultBox');
+
+            if (!query) {
+                resultBox.classList.add('hidden');
+                return;
+            }
+
+            let foundMember = null;
+            let foundTeam = null;
+
+            teams.forEach(team => {
+                if (team.members) {
+                    const match = team.members.find(m => m.toLowerCase().includes(query));
+                    if (match) {
+                        foundMember = match;
+                        foundTeam = team;
+                    }
+                }
+            });
+
+            resultBox.classList.remove('hidden');
+            if (foundMember && foundTeam) {
+                resultBox.className = `p-4 rounded-xl text-xs font-semibold flex items-center justify-between border ${foundTeam.bgLight} ${foundTeam.borderClass} ${foundTeam.textClass}`;
+                resultBox.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">${foundTeam.emoji}</span>
+                        <span><strong>${foundMember}</strong> zit in <strong>${foundTeam.shortName || foundTeam.name}</strong>!</span>
+                    </div>
+                    <span class="bg-white/80 px-2.5 py-1 rounded-lg text-[11px] font-bold shadow-sm">Huidige stand: ${foundTeam.points} ptn</span>
+                `;
+            } else {
+                resultBox.className = "p-4 rounded-xl text-xs font-semibold flex items-center justify-between border bg-slate-100 text-slate-600 border-slate-300";
+                resultBox.innerHTML = `<span><i class="fa-solid fa-circle-exclamation mr-1"></i> Geen collega gevonden met de naam "${query}"</span>`;
+            }
+        }
+
+        function renderLogs() {
+            const list = document.getElementById('activityLogList');
+            const count = document.getElementById('logCount');
+            if (!list) return;
+
+            count.innerText = `${activityLogs.length} updates`;
+            if (activityLogs.length === 0) {
+                list.innerHTML = '<p class="text-xs text-slate-400 italic">Nog geen activiteiten geregistreerd.</p>';
+                return;
+            }
+
+            list.innerHTML = activityLogs.slice(0, 8).map(log => `
+                <div class="flex items-center justify-between bg-slate-50 border border-slate-200/80 p-2.5 rounded-xl text-xs">
+                    <span class="font-medium text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500"></i> ${log.text}
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-mono">${log.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function toggleInfoModal() {
+            document.getElementById('infoModal').classList.toggle('hidden');
+        }
+
+        function toggleTroubleshootModal() {
+            document.getElementById('troubleshootModal').classList.toggle('hidden');
+        }
+
+        function attemptAdminLogin() {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            const err = document.getElementById('loginErrorMsg');
+            if (pwd === 'taal2026' || pwd === 'admin') {
+                isAdminLoggedIn = true;
+                err.classList.add('hidden');
+                document.getElementById('adminLoginSection').classList.add('hidden');
+                document.getElementById('adminControlsSection').classList.remove('hidden');
+                document.getElementById('adminBtnText').innerText = "Beheerder Actief";
+                document.getElementById('adminLockIcon').className = "fa-solid fa-lock-open text-amber-400";
+                showToast("Succesvol ingelogd als Beheerder!");
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            document.getElementById('adminLoginSection').classList.remove('hidden');
+            document.getElementById('adminControlsSection').classList.add('hidden');
+            document.getElementById('adminBtnText').innerText = "Beheerdersmodus";
+            document.getElementById('adminLockIcon').className = "fa-solid fa-lock";
+            document.getElementById('adminPasswordInput').value = '';
+            showToast("Uitgelogd als Beheerder.");
+        }
+
+        function switchAdminTab(tab) {
+            const pointsTab = document.getElementById('adminTabPoints');
+            const lessonsTab = document.getElementById('adminTabLessons');
+            const btnP = document.getElementById('tabPointsBtn');
+            const btnL = document.getElementById('tabLessonsBtn');
+
+            if (tab === 'points') {
+                pointsTab.classList.remove('hidden');
+                lessonsTab.classList.add('hidden');
+                btnP.className = "border-b-2 border-brand-600 pb-2 text-xs font-bold text-brand-600";
+                btnL.className = "border-b-2 border-transparent pb-2 text-xs font-semibold text-slate-500 hover:text-slate-800";
+            } else {
+                pointsTab.classList.add('hidden');
+                lessonsTab.classList.remove('hidden');
+                btnL.className = "border-b-2 border-brand-600 pb-2 text-xs font-bold text-brand-600";
+                btnP.className = "border-b-2 border-transparent pb-2 text-xs font-semibold text-slate-500 hover:text-slate-800";
+            }
+        }
+
+        function setPointPreset(val, reason) {
+            document.getElementById('adminPointsInput').value = val;
+            document.getElementById('adminReasonInput').value = reason;
+        }
+
+        function submitPointsUpdate() {
+            const teamId = document.getElementById('adminTeamSelect').value;
+            const pointsVal = parseInt(document.getElementById('adminPointsInput').value) || 0;
+            const actionType = document.getElementById('adminActionType').value;
+            const reason = document.getElementById('adminReasonInput').value || 'Puntencorrectie door beheerder';
+
+            const team = teams.find(t => t.id === teamId);
+            if (!team) return;
+
+            const change = actionType === '+' ? pointsVal : -pointsVal;
+            const oldLeader = [...teams].sort((a,b) => b.points - a.points)[0];
+
+            team.points = Math.max(0, team.points + change);
+
+            const newLeader = [...teams].sort((a,b) => b.points - a.points)[0];
+
+            if (newLeader.id !== oldLeader.id || (change > 0 && team.id === newLeader.id)) {
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+                }
+            }
+
+            saveTeamsState();
+            renderLeaderboard();
+            renderTeamsRoster();
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            activityLogs.unshift({
+                id: Date.now(),
+                text: `${team.shortName || team.name} ${actionType}${pointsVal} pt (${reason})`,
+                time: timeStr
+            });
+            localStorage.setItem('gluren_logs_v3', JSON.stringify(activityLogs));
+            renderLogs();
+
+            showToast(`${team.shortName || team.name}: ${team.points} ptn!`);
+            closeAdminModal();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const msg = document.getElementById('toastMessage');
+            if (!toast || !msg) return;
+
+            msg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Automatic Page Load Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            setSelectedDay('Maandag');
+            renderLeaderboard();
+            renderTeamsRoster();
+            renderLessons();
+            renderLogs();
+            
+            // Auto-fetch lessons from Google Sheets Plananas on page load
+            fetchPlananasData(false);
+        });
+
+        // Google Sheets Settings with configurable fallback ID
+        let PLANANAS_SPREADSHEET_ID = localStorage.getItem('gluren_sheet_id') || '1X-_tzZMuhOLNyjzQXLiYYA-yECVg0VYHk3HGboeOuLI';
+        let PLANANAS_GID = localStorage.getItem('gluren_sheet_gid') || '291812062';
+
+        async function fetchPlananasData(showToastNotification = false) {
+            const syncIcon = document.getElementById('syncIcon');
+            const syncBadge = document.getElementById('syncStatusBadge');
+            const errorBanner = document.getElementById('syncErrorBanner');
+            
+            if (syncIcon) syncIcon.classList.add('fa-spin');
+            if (syncBadge) syncBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Ophalen...';
+
+            if (errorBanner) errorBanner.classList.add('hidden');
+
+            // Endpoints with fallbacks for CORS & published formats
+            const endpoints = [
+                // Endpoint 1: Google Visualization API CSV Export
+                `https://docs.google.com/spreadsheets/d/${PLANANAS_SPREADSHEET_ID}/gviz/tq?tqx=out:csv&gid=${PLANANAS_GID}`,
+                // Endpoint 2: Direct published CSV URL
+                `https://docs.google.com/spreadsheets/d/${PLANANAS_SPREADSHEET_ID}/pub?gid=${PLANANAS_GID}&single=true&output=csv`,
+                // Endpoint 3: AllOrigins CORS Proxy Fallback
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${PLANANAS_SPREADSHEET_ID}/gviz/tq?tqx=out:csv&gid=${PLANANAS_GID}`)}`,
+                // Endpoint 4: CorsProxy.io Fallback
+                `https://corsproxy.io/?${encodeURIComponent(`https://docs.google.com/spreadsheets/d/${PLANANAS_SPREADSHEET_ID}/pub?gid=${PLANANAS_GID}&single=true&output=csv`)}`
+            ];
+
+            let csvText = null;
+            let lastError = null;
+
+            for (const url of endpoints) {
+                try {
+                    const response = await fetch(url, { cache: "no-cache" });
+                    if (response.ok) {
+                        const text = await response.text();
+                        if (text && text.trim().length > 10 && !text.includes('<!DOCTYPE html>')) {
+                            csvText = text;
+                            break; // Successfully retrieved CSV data
+                        }
+                    }
+                } catch (err) {
+                    lastError = err;
+                }
+            }
+
+            if (csvText) {
+                const parsedLessons = parsePlananasCSV(csvText);
+
+                if (parsedLessons && parsedLessons.length > 0) {
+                    lessons = parsedLessons;
+                    localStorage.setItem('gluren_lessons_v3', JSON.stringify(lessons));
+                    renderLessons();
+                    if (syncBadge) {
+                        const now = new Date();
+                        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        syncBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Synced (${timeStr})`;
+                    }
+                    if (showToastNotification) showToast("Menu van de Dag bijgewerkt via Plananas!");
+                } else {
+                    if (syncBadge) syncBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span> Geen Lessen`;
+                    if (showToastNotification) showToast("Geen open lessen gevonden in Plananas.");
+                }
+            } else {
+                console.warn('Geen live Google Sheets data geladen, lokale/opgeslagen data gebruikt:', lastError);
+                if (syncBadge) syncBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span> Offline / Fallback`;
+                if (errorBanner) errorBanner.classList.remove('hidden');
+                if (showToastNotification) showToast("Kon Plananas niet bereiken. Klik op 'Hulp' voor oplossingen.");
+            }
+
+            if (syncIcon) syncIcon.classList.remove('fa-spin');
+        }
+
+        // CSV Parsing Helper with Tab, Semicolon and Comma support
+        function parsePlananasCSV(text) {
+            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length <= 1) return null;
+
+            const fetchedLessons = [];
+            const validDays = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag'];
+
+            // Auto-detect delimiter (tab, semicolon, or comma)
+            const firstLine = lines[0];
+            let delimiter = ',';
+            if (firstLine.includes('\t')) delimiter = '\t';
+            else if (firstLine.includes(';')) delimiter = ';';
+
+            for (let i = 1; i < lines.length; i++) {
+                let row;
+                if (delimiter === '\t') {
+                    row = lines[i].split('\t').map(c => c.replace(/^"|"$/g, '').trim());
+                } else {
+                    const regex = new RegExp(`${delimiter}(?=(?:(?:[^"]*"){2})*[^"]*$)`);
+                    row = lines[i].split(regex).map(c => c ? c.replace(/^"|"$/g, '').trim() : '');
+                }
+                
+                if (row.length >= 3) {
+                    const rawDay = row[0] || 'Maandag';
+                    const matchedDay = validDays.find(d => rawDay.toLowerCase().includes(d.toLowerCase())) || 'Maandag';
+
+                    const rawTime = row[1] || '1e uur';
+                    const teacher = row[2] || '';
+                    const subject = row[5] || row[3] || '';
+                    const room = row[6] || row[4] || 'A101';
+                    const topic = row[7] || row[5] || '';
+
+                    if (teacher || subject || topic) {
+                        fetchedLessons.push({
+                            id: `sheet_${i}_${Date.now()}`,
+                            day: matchedDay,
+                            time: rawTime.includes('uur') ? rawTime : `${rawTime}e uur`,
+                            teacher: teacher || 'Collega',
+                            subject: subject || 'Open Les',
+                            room: room || 'Klas',
+                            topic: topic
+                        });
+                    }
+                }
+            }
+            return fetchedLessons.length > 0 ? fetchedLessons : null;
+        }
+
+        // Direct manual CSV paste import
+        function importDirectCsv() {
+            const rawText = document.getElementById('directCsvInput').value.trim();
+            if (!rawText) {
+                showToast("Plak eerst de CSV- of Google Sheets-tekst in het vak!");
+                return;
+            }
+
+            const parsed = parsePlananasCSV(rawText);
+            if (parsed && parsed.length > 0) {
+                lessons = parsed;
+                localStorage.setItem('gluren_lessons_v3', JSON.stringify(lessons));
+                renderLessons();
+                toggleTroubleshootModal();
+                showToast(`Succesvol ${parsed.length} lessen geïmporteerd!`);
+                
+                const syncBadge = document.getElementById('syncStatusBadge');
+                if (syncBadge) syncBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Handmatig Geïmporteerd`;
+                
+                const errorBanner = document.getElementById('syncErrorBanner');
+                if (errorBanner) errorBanner.classList.add('hidden');
+            } else {
+                showToast("Kon geen geldige lesrijen herkennen. Controleer de indeling.");
+            }
+        }
+
+        function saveCustomSheetSettings() {
+            const sheetId = document.getElementById('customSheetIdInput').value.trim();
+            const sheetGid = document.getElementById('customSheetGidInput').value.trim();
+
+            if (sheetId) {
+                PLANANAS_SPREADSHEET_ID = sheetId;
+                PLANANAS_GID = sheetGid || '0';
+                localStorage.setItem('gluren_sheet_id', sheetId);
+                localStorage.setItem('gluren_sheet_gid', PLANANAS_GID);
+                showToast("Instellingen opgeslagen! Bezig met ophalen...");
+                fetchPlananasData(true);
+            }
+        }
+    </script>
+</body>
+</html>
